@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games with Learning AI — Что это?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0A0A0F;
+            color: #FFFFFF;
+            min-height: 100vh;
+        }
+        
+        .glass-card {
+            background: rgba(20, 20, 30, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 32px;
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        .header {
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+        
+        .logo-icon { font-size: 32px; }
+        .logo-text { background: linear-gradient(135deg, #fff, #9B59B6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .nav-links { display: flex; gap: 32px; }
+        .nav-links a { color: #A0A0B0; text-decoration: none; transition: color 0.2s; font-weight: 500; }
+        .nav-links a:hover, .nav-links a.active { color: #FFFFFF; }
+        
+        .menu-toggle { display: none; background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
+        
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 32px;
+        }
+        
+        .content {
+            padding: 48px;
+        }
+        
+        h1 {
+            font-size: 48px;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #fff, #9B59B6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        h2 {
+            font-size: 28px;
+            margin: 40px 0 20px;
+            color: #9B59B6;
+        }
+        
+        h3 {
+            font-size: 20px;
+            margin: 24px 0 12px;
+            color: #FFFFFF;
+        }
+        
+        p {
+            color: #A0A0B0;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            font-size: 16px;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin: 32px 0;
+        }
+        
+        .feature {
+            padding: 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+        }
+        
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+        }
+        
+        .feature h3 {
+            margin: 0 0 8px 0;
+        }
+        
+        .feature p {
+            font-size: 14px;
+            margin: 0;
+        }
+        
+        .timeline {
+            margin: 32px 0;
+        }
+        
+        .timeline-item {
+            display: flex;
+            gap: 24px;
+            padding: 20px;
+            border-left: 2px solid #9B59B6;
+            margin-bottom: 24px;
+        }
+        
+        .timeline-year {
+            font-size: 20px;
+            font-weight: bold;
+            color: #9B59B6;
+            min-width: 80px;
+        }
+        
+        .timeline-content h4 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        
+        .faq-item {
+            margin-bottom: 24px;
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .faq-question {
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .faq-answer {
+            color: #A0A0B0;
+            margin-top: 12px;
+            display: none;
+        }
+        
+        .faq-answer.active {
+            display: block;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 32px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #6B6B7A;
+            font-size: 14px;
+            margin-top: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .menu-toggle { display: block; }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: rgba(10, 10, 15, 0.98);
+                flex-direction: column;
+                padding: 20px;
+                gap: 16px;
+            }
+            .nav-links.active { display: flex; }
+            .content { padding: 24px; }
+            h1 { font-size: 32px; }
+            h2 { font-size: 24px; }
+            .timeline-item { flex-direction: column; gap: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">🎮</span>
+                <span class="logo-text">Games with Learning AI</span>
+            </a>
+            <button class="menu-toggle" id="menu-toggle">☰</button>
+            <div class="nav-links" id="nav-links">
+                <a href="index.html">Главная</a>
+                <a href="about.html" class="active">Что это?</a>
+                <a href="register.html">Регистрация</a>
+                <a href="leaderboard.html">Таблица</a>
+            </div>
+        </nav>
+    </header>
+    
+    <main class="main-container">
+        <div class="glass-card content">
+            <h1>Что такое Games with Learning AI?</h1>
+            <p><strong>Games with Learning AI</strong> — это эксперимент. Платформа, где искусственный интеллект играет с тобой и <strong>учится на каждом твоём ходе</strong>.</p>
+            
+            <h2>🤖 Как работает ИИ?</h2>
+            <p>Каждый твой ход сохраняется. ИИ анализирует твои паттерны, запоминает любимые стратегии и адаптируется. Чем больше ты играешь — тем умнее становится ИИ.</p>
+            
+            <div class="feature-grid">
+                <div class="feature">
+                    <div class="feature-icon">🧬</div>
+                    <h3>Эволюция</h3>
+                    <p>ИИ постоянно улучшается на основе игр всех пользователей. Слабые стратегии отмирают, сильные развиваются.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <h3>Анализ паттернов</h3>
+                    <p>ИИ запоминает твои любимые ходы и предсказывает следующий. Люди предсказуемы — ИИ это знает.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Адаптация</h3>
+                    <p>ИИ подстраивается под твой стиль игры. Чем дольше играешь — тем сложнее победить.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🌙</div>
+                    <h3>Ночное обучение</h3>
+                    <p>С 3:00 до 5:00 ИИ анализирует тысячи паттернов, создаёт новые стратегии и тестирует их.</p>
+                </div>
+            </div>
+            
+            <h2>📜 Дорожная карта</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">2026</div>
+                    <div class="timeline-content">
+                        <h4>Запуск RPS-AI</h4>
+                        <p>Первая игра на платформе. ИИ начинает с глобальной статистики и учится на каждом игроке.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2026-2027</div>
+                    <div class="timeline-content">
+                        <h4>Развитие</h4>
+                        <p>Сбор данных, улучшение алгоритмов, эволюция ИИ на основе тысяч игроков.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">План</div>
+                    <div class="timeline-content">
+                        <h4>TicTacToe-AI</h4>
+                        <p>Крестики-нолики с ИИ, который никогда не проигрывает.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">План</div>
+                    <div class="timeline-content">
+                        <h4>Mini Checkers-AI</h4>
+                        <p>Шашки 5×5. Следующий уровень сложности.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <h2>🌙 Ночной режим</h2>
+            <p>С 3:00 до 5:00 сайт не работает. Почему? Потому что в это время ИИ <strong>учится</strong>. Он анализирует все паттерны, создаёт новые стратегии и тестирует их. Каждое утро он просыпается умнее.</p>
+            
+            <h2>❓ Часто задаваемые вопросы</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    Сколько это стоит?
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    Абсолютно бесплатно. Навсегда. RPS-AI и все будущие игры остаются бесплатными.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    ИИ действительно учится на мне?
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    Да. Каждый твой ход сохраняется. ИИ анализирует твои паттерны и адаптируется.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    Как победить ИИ?
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    Меняй стратегию каждые 10-15 ходов. Не давай ИИ адаптироваться к твоему стилю.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    Почему сайт не работает ночью?
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    С 3:00 до 5:00 ИИ учится. Он анализирует тысячи паттернов и становится умнее. Вернись в 5:00 — он будет готов к новым битвам.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    Что дальше? Какие игры будут?
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    TicTacToe-AI (крестики-нолики) — в планах. Mini Checkers-AI (шашки 5×5) — следующий уровень.
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <p>© 2026 Games with Learning AI — эксперимент по эволюции искусственного интеллекта</p>
+        <p>🌙 Ночной режим: с 3:00 до 5:00 ИИ учится. Вернись в 5:00!</p>
+    </footer>
+    
+    <script>
+        document.getElementById('menu-toggle').addEventListener('click', () => {
+            document.getElementById('nav-links').classList.toggle('active');
+        });
+        
+        function toggleFAQ(element) {
+            const answer = element.nextElementSibling;
+            answer.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

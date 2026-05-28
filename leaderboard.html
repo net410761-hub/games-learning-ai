@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games with Learning AI — Таблица рекордов</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0A0A0F;
+            color: #FFFFFF;
+            min-height: 100vh;
+        }
+        
+        .glass-card {
+            background: rgba(20, 20, 30, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 32px;
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        .header {
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+        
+        .logo-icon { font-size: 32px; }
+        .logo-text { background: linear-gradient(135deg, #fff, #9B59B6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .nav-links { display: flex; gap: 32px; }
+        .nav-links a { color: #A0A0B0; text-decoration: none; transition: color 0.2s; font-weight: 500; }
+        .nav-links a:hover, .nav-links a.active { color: #FFFFFF; }
+        
+        .menu-toggle { display: none; background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
+        
+        .main-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 32px;
+        }
+        
+        .leaderboard-content {
+            padding: 48px;
+        }
+        
+        h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #A0A0B0;
+            margin-bottom: 32px;
+            font-size: 14px;
+        }
+        
+        .stats-summary {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 16px 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            min-width: 120px;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #9B59B6;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #A0A0B0;
+            margin-top: 4px;
+        }
+        
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 40px;
+            padding: 8px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            color: #A0A0B0;
+            transition: all 0.2s;
+        }
+        
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .filter-btn.active {
+            background: #9B59B6;
+            color: white;
+            border-color: #9B59B6;
+        }
+        
+        .leaderboard-table {
+            width: 100%;
+        }
+        
+        .table-header {
+            display: grid;
+            grid-template-columns: 80px 1fr 120px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #A0A0B0;
+            font-size: 14px;
+        }
+        
+        .leaderboard-row {
+            display: grid;
+            grid-template-columns: 80px 1fr 120px;
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.2s;
+            font-size: 16px;
+        }
+        
+        .leaderboard-row:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        
+        .rank-1 {
+            background: rgba(255, 215, 0, 0.08);
+        }
+        
+        .rank-2 {
+            background: rgba(192, 192, 192, 0.08);
+        }
+        
+        .rank-3 {
+            background: rgba(205, 127, 50, 0.08);
+        }
+        
+        .rank {
+            font-weight: bold;
+        }
+        
+        .rank-1 .rank { color: #FFD700; }
+        .rank-2 .rank { color: #C0C0C0; }
+        .rank-3 .rank { color: #CD7F32; }
+        
+        .player-name {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .player-badge {
+            font-size: 12px;
+            background: rgba(155, 89, 182, 0.2);
+            padding: 2px 8px;
+            border-radius: 20px;
+            color: #9B59B6;
+        }
+        
+        .score {
+            text-align: right;
+            font-weight: bold;
+            color: #9B59B6;
+        }
+        
+        .your-record {
+            margin-top: 32px;
+            padding: 20px;
+            background: rgba(155, 89, 182, 0.1);
+            border-radius: 16px;
+            text-align: center;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: #A0A0B0;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #A0A0B0;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 32px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #6B6B7A;
+            font-size: 14px;
+            margin-top: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .menu-toggle { display: block; }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: rgba(10, 10, 15, 0.98);
+                flex-direction: column;
+                padding: 20px;
+                gap: 16px;
+            }
+            .nav-links.active { display: flex; }
+            .leaderboard-content { padding: 24px; }
+            .table-header, .leaderboard-row {
+                grid-template-columns: 60px 1fr 80px;
+                font-size: 14px;
+            }
+            .stats-summary { gap: 16px; }
+            .stat-value { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">🎮</span>
+                <span class="logo-text">Games with Learning AI</span>
+            </a>
+            <button class="menu-toggle" id="menu-toggle">☰</button>
+            <div class="nav-links" id="nav-links">
+                <a href="index.html">Главная</a>
+                <a href="about.html">Что это?</a>
+                <a href="register.html">Регистрация</a>
+                <a href="leaderboard.html" class="active">Таблица</a>
+            </div>
+        </nav>
+    </header>
+    
+    <main class="main-container">
+        <div class="glass-card leaderboard-content">
+            <h1>🏆 Таблица рекордов</h1>
+            <div class="subtitle">Лучшие игроки RPS-AI за всё время</div>
+            
+            <div class="stats-summary" id="stats-summary">
+                <div class="stat-card">
+                    <div class="stat-value" id="total-players">0</div>
+                    <div class="stat-label">всего игроков</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="total-records">0</div>
+                    <div class="stat-label">рекордов</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="top-streak">0</div>
+                    <div class="stat-label">рекорд мира</div>
+                </div>
+            </div>
+            
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">🏆 Все</button>
+                <button class="filter-btn" data-filter="today">📅 Сегодня</button>
+                <button class="filter-btn" data-filter="week">📆 За неделю</button>
+                <button class="filter-btn" data-filter="month">🌙 За месяц</button>
+            </div>
+            
+            <div class="leaderboard-table">
+                <div class="table-header">
+                    <div>Место</div>
+                    <div>Игрок</div>
+                    <div>Побед подряд</div>
+                </div>
+                <div id="leaderboard-list">
+                    <div class="loading">🏆 Загрузка рекордов...</div>
+                </div>
+            </div>
+            
+            <div id="your-record" class="your-record" style="display: none;"></div>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <p>© 2026 Games with Learning AI — эксперимент по эволюции искусственного интеллекта</p>
+        <p>🏆 Рекорды сохраняются в твоём браузере. При регистрации они станут общими для всех!</p>
+    </footer>
+    
+    <script>
+        // Мобильное меню
+        document.getElementById('menu-toggle').addEventListener('click', () => {
+            document.getElementById('nav-links').classList.toggle('active');
+        });
+        
+        // Текущий фильтр
+        let currentFilter = 'all';
+        
+        // Загрузка рекордов из localStorage
+        function getLeaderboard() {
+            const records = JSON.parse(localStorage.getItem('rps_leaderboard') || '[]');
+            return records;
+        }
+        
+        // Фильтрация по времени
+        function filterByTime(records, filter) {
+            const now = Date.now();
+            const day = 24 * 60 * 60 * 1000;
+            const week = 7 * day;
+            const month = 30 * day;
+            
+            return records.filter(record => {
+                const recordTime = new Date(record.date).getTime();
+                if (filter === 'today') return now - recordTime < day;
+                if (filter === 'week') return now - recordTime < week;
+                if (filter === 'month') return now - recordTime < month;
+                return true;
+            });
+        }
+        
+        // Обновление статистики
+        function updateStats(records) {
+            const uniquePlayers = new Set(records.map(r => r.name));
+            const topStreak = records.length > 0 ? Math.max(...records.map(r => r.streak)) : 0;
+            
+            document.getElementById('total-players').innerText = uniquePlayers.size;
+            document.getElementById('total-records').innerText = records.length;
+            document.getElementById('top-streak').innerText = topStreak;
+        }
+        
+        // Отображение таблицы
+        function displayLeaderboard(records) {
+            const container = document.getElementById('leaderboard-list');
+            
+            if (records.length === 0) {
+                container.innerHTML = '<div class="empty-state">🏆 Пока нет рекордов. Будь первым!</div>';
+                return;
+            }
+            
+            // Сортируем по убыванию
+            records.sort((a, b) => b.streak - a.streak);
+            const topRecords = records.slice(0, 50);
+            
+            container.innerHTML = '';
+            
+            for (let i = 0; i < topRecords.length; i++) {
+                const r = topRecords[i];
+                const rank = i + 1;
+                let rankClass = '';
+                let rankDisplay = rank;
+                
+                if (rank === 1) { rankClass = 'rank-1'; rankDisplay = '👑 1'; }
+                else if (rank === 2) { rankClass = 'rank-2'; rankDisplay = '⭐ 2'; }
+                else if (rank === 3) { rankClass = 'rank-3'; rankDisplay = '⚡ 3'; }
+                else { rankDisplay = `${rank}`; }
+                
+                const div = document.createElement('div');
+                div.className = `leaderboard-row ${rankClass}`;
+                div.innerHTML = `
+                    <div class="rank">${rankDisplay}</div>
+                    <div class="player-name">
+                        ${escapeHtml(r.name)}
+                        ${r.isCurrentUser ? '<span class="player-badge">Ты</span>' : ''}
+                    </div>
+                    <div class="score">${r.streak} побед</div>
+                `;
+                container.appendChild(div);
+            }
+        }
+        
+        // Показать твой рекорд
+        function showYourRecord(records) {
+            const playerName = localStorage.getItem('rps_player_name');
+            if (!playerName) {
+                document.getElementById('your-record').style.display = 'none';
+                return;
+            }
+            
+            const yourRecords = records.filter(r => r.name === playerName);
+            const bestRecord = yourRecords.length > 0 ? Math.max(...yourRecords.map(r => r.streak)) : 0;
+            const container = document.getElementById('your-record');
+            
+            if (bestRecord > 0) {
+                container.style.display = 'block';
+                container.innerHTML = `
+                    <strong>🏆 Твой рекорд</strong><br>
+                    ${escapeHtml(playerName)} — ${bestRecord} побед подряд
+                    <div style="font-size: 12px; color: #A0A0B0; margin-top: 8px;">
+                        ${yourRecords.length} рекордов в истории
+                    </div>
+                    <div style="margin-top: 12px;">
+                        <a href="rps/index.html" style="color: #9B59B6; text-decoration: none;">🎮 Попробуй побить свой рекорд →</a>
+                    </div>
+                `;
+            } else {
+                container.style.display = 'block';
+                container.innerHTML = `
+                    <strong>🏆 У тебя пока нет рекордов</strong><br>
+                    Сыграй в RPS-AI и установи рекорд!
+                    <div style="margin-top: 12px;">
+                        <a href="rps/index.html" style="color: #9B59B6; text-decoration: none;">🎮 Начать игру →</a>
+                    </div>
+                `;
+            }
+        }
+        
+        // Обновить весь leaderboard
+        function refreshLeaderboard() {
+            let records = getLeaderboard();
+            
+            // Добавляем флаг currentUser
+            const currentUser = localStorage.getItem('rps_player_name');
+            records = records.map(r => ({
+                ...r,
+                isCurrentUser: r.name === currentUser
+            }));
+            
+            const filteredRecords = filterByTime(records, currentFilter);
+            updateStats(filteredRecords);
+            displayLeaderboard(filteredRecords);
+            showYourRecord(records);
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Фильтры
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.getAttribute('data-filter');
+                refreshLeaderboard();
+            });
+        });
+        
+        // Инициализация
+        refreshLeaderboard();
+        
+        // Слушаем изменения в localStorage (если в другой вкладке обновили)
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'rps_leaderboard' || e.key === 'rps_player_name') {
+                refreshLeaderboard();
+            }
+        });
+    </script>
+</body>
+</html>

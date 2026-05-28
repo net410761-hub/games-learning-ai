@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>RPS-AI — Играй против эволюционирующего ИИ</title>
+    <meta name="description" content="Играй против ИИ, который учится на каждом твоём ходе. Камень-ножницы-бумага с искусственным интеллектом.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0A0A0F;
+            color: #FFFFFF;
+            min-height: 100vh;
+        }
+        
+        /* Анимированный фон */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 50%, rgba(155, 89, 182, 0.15) 0%, transparent 60%),
+                        radial-gradient(circle at 80% 80%, rgba(52, 152, 219, 0.1) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: -2;
+        }
+        
+        /* Glass эффект */
+        .glass-card {
+            background: rgba(20, 20, 30, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 32px;
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        /* Header */
+        .header {
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+        
+        .logo-icon { font-size: 32px; }
+        .logo-text { background: linear-gradient(135deg, #fff, #9B59B6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .nav-links { display: flex; gap: 32px; }
+        .nav-links a { color: #A0A0B0; text-decoration: none; transition: color 0.2s; font-weight: 500; }
+        .nav-links a:hover { color: #FFFFFF; }
+        
+        .menu-toggle { display: none; background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
+        
+        /* Back button */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #A0A0B0;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: color 0.2s;
+        }
+        
+        .back-link:hover { color: #9B59B6; }
+        
+        /* Main container */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 32px;
+        }
+        
+        .game-layout {
+            display: grid;
+            grid-template-columns: 1fr 0.8fr;
+            gap: 24px;
+        }
+        
+        .game-section, .stats-section {
+            padding: 32px;
+        }
+        
+        /* VS блок */
+        .vs-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        
+        .player-card, .ai-card {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            margin: 0 auto 16px;
+        }
+        
+        .ai-avatar {
+            box-shadow: 0 0 30px rgba(155, 89, 182, 0.3);
+            animation: aiPulse 3s infinite;
+        }
+        
+        @keyframes aiPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(155, 89, 182, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(155, 89, 182, 0.6); }
+        }
+        
+        .ai-name { color: #9B59B6; font-weight: bold; }
+        .vs-text { font-size: 28px; font-weight: bold; color: #9B59B6; }
+        .streak { font-size: 14px; color: #A0A0B0; margin-top: 8px; }
+        
+        /* Кнопки ходов */
+        .move-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 40px 0;
+        }
+        
+        .move-btn {
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 24px 32px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .move-btn:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .move-emoji { font-size: 48px; display: block; margin-bottom: 8px; }
+        .move-label { font-size: 14px; font-weight: 500; }
+        
+        .move-btn.rock:hover { border-color: #E74C3C; }
+        .move-btn.scissors:hover { border-color: #F39C12; }
+        .move-btn.paper:hover { border-color: #3498DB; }
+        
+        /* Результат */
+        .result-area {
+            text-align: center;
+            padding: 24px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+        }
+        
+        .result-text { font-size: 28px; font-weight: bold; }
+        .result-win { color: #2ECC71; }
+        .result-lose { color: #E74C3C; }
+        .result-tie { color: #F39C12; }
+        .result-detail { font-size: 16px; color: #A0A0B0; margin-top: 8px; }
+        
+        /* Статистика */
+        .stats-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .leaderboard-list { margin-bottom: 24px; }
+        
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .rank-1 .rank { color: #FFD700; }
+        .rank-2 .rank { color: #C0C0C0; }
+        .rank-3 .rank { color: #CD7F32; }
+        
+        /* Прогресс */
+        .evolution-progress {
+            margin-top: 24px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #9B59B6, #3498DB);
+            border-radius: 4px;
+            transition: width 0.5s;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 32px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #6B6B7A;
+            font-size: 14px;
+            margin-top: 40px;
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            animation: confettiFall 1s ease-out forwards;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        @keyframes confettiFall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+        
+        @media (max-width: 768px) {
+            .menu-toggle { display: block; }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: rgba(10, 10, 15, 0.98);
+                flex-direction: column;
+                padding: 20px;
+                gap: 16px;
+            }
+            .nav-links.active { display: flex; }
+            .game-layout { grid-template-columns: 1fr; }
+            .main-container { padding: 20px; }
+            .move-buttons { gap: 12px; }
+            .move-btn { padding: 16px 20px; }
+            .move-emoji { font-size: 32px; }
+            .avatar { width: 70px; height: 70px; font-size: 32px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="../index.html" class="logo">
+                <span class="logo-icon">🎮</span>
+                <span class="logo-text">Games with Learning AI</span>
+            </a>
+            <button class="menu-toggle" id="menu-toggle">☰</button>
+            <div class="nav-links" id="nav-links">
+                <a href="../index.html">Главная</a>
+                <a href="../about.html">Что это?</a>
+                <a href="../register.html">Регистрация</a>
+                <a href="../leaderboard.html">Таблица</a>
+            </div>
+        </nav>
+    </header>
+    
+    <main class="main-container">
+        <a href="../index.html" class="back-link">← Назад к играм</a>
+        
+        <div class="game-layout">
+            <!-- Левая колонка — игра -->
+            <div class="glass-card game-section">
+                <div class="vs-display">
+                    <div class="player-card">
+                        <div class="avatar" id="player-avatar">👤</div>
+                        <div id="player-name">ИГРОК</div>
+                        <div class="streak" id="streak-display">🔥 0 побед</div>
+                    </div>
+                    <div class="vs-divider">
+                        <div class="vs-text">VS</div>
+                        <div style="font-size: 12px;" id="gen-display">поколение #1</div>
+                    </div>
+                    <div class="ai-card">
+                        <div class="avatar ai-avatar">🧠</div>
+                        <div class="ai-name">RPS-AI</div>
+                        <div id="winrate-display">0% побед</div>
+                    </div>
+                </div>
+                
+                <div class="move-buttons">
+                    <button class="move-btn rock" data-move="rock">
+                        <span class="move-emoji">🪨</span>
+                        <span class="move-label">КАМЕНЬ</span>
+                    </button>
+                    <button class="move-btn scissors" data-move="scissors">
+                        <span class="move-emoji">✂️</span>
+                        <span class="move-label">НОЖНИЦЫ</span>
+                    </button>
+                    <button class="move-btn paper" data-move="paper">
+                        <span class="move-emoji">📄</span>
+                        <span class="move-label">БУМАГА</span>
+                    </button>
+                </div>
+                
+                <div class="result-area" id="result-area">
+                    <div class="result-text">⚡ СДЕЛАЙ ХОД</div>
+                    <div class="result-detail">RPS-AI ждёт твоего выбора</div>
+                </div>
+            </div>
+            
+            <!-- Правая колонка — статистика -->
+            <div class="glass-card stats-section">
+                <div class="stats-title">🏆 ТОП СЕГОДНЯ</div>
+                <div class="leaderboard-list" id="leaderboard"></div>
+                <a href="../leaderboard.html" style="color: #9B59B6; text-decoration: none; font-size: 14px;">ВСЯ ТАБЛИЦА →</a>
+                
+                <div class="stats-title" style="margin-top: 24px;">📈 ТВОЯ СТАТИСТИКА</div>
+                <div class="leaderboard-list">
+                    <div class="leaderboard-item"><span>Всего игр</span><span id="total-games">0</span></div>
+                    <div class="leaderboard-item"><span>Побед</span><span id="player-wins">0</span></div>
+                    <div class="leaderboard-item"><span>Поражений</span><span id="player-losses">0</span></div>
+                    <div class="leaderboard-item"><span>Лучшая серия</span><span id="best-streak">0</span></div>
+                </div>
+                
+                <div class="evolution-progress">
+                    <div class="stats-title">🧬 ЭВОЛЮЦИЯ ИИ</div>
+                    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width: 0%"></div></div>
+                    <div style="display: flex; justify-content: space-between; font-size: 12px;">
+                        <span id="current-gen">Поколение 1</span>
+                        <span id="target-gen">Цель: 100 игр</span>
+                    </div>
+                    <div style="margin-top: 12px; font-size: 12px; color: #A0A0B0;" id="evolution-message">
+                        🧠 Сыграй 100 игр, чтобы ИИ эволюционировал
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <p>© 2026 Games with Learning AI — эксперимент по эволюции искусственного интеллекта</p>
+        <p>🌙 Ночной режим: с 3:00 до 5:00 ИИ учится. Вернись в 5:00!</p>
+    </footer>
+    
+    <script>
+        // ========== ИГРОК ==========
+        let playerStats = {
+            games: 0, wins: 0, losses: 0, currentStreak: 0, bestStreak: 0
+        };
+        
+        let aiHistory = [];
+        
+        function loadStats() {
+            const saved = localStorage.getItem('rps_player_stats');
+            if (saved) playerStats = JSON.parse(saved);
+            updateStatsDisplay();
+        }
+        
+        function saveStats() {
+            localStorage.setItem('rps_player_stats', JSON.stringify(playerStats));
+        }
+        
+        function updateStatsDisplay() {
+            document.getElementById('total-games').innerText = playerStats.games;
+            document.getElementById('player-wins').innerText = playerStats.wins;
+            document.getElementById('player-losses').innerText = playerStats.losses;
+            document.getElementById('best-streak').innerText = playerStats.bestStreak;
+            document.getElementById('streak-display').innerHTML = `🔥 ${playerStats.currentStreak} побед`;
+            
+            const playerName = localStorage.getItem('rps_player_name') || 'ИГРОК';
+            document.getElementById('player-name').innerHTML = playerName;
+            
+            const progress = Math.min(100, (playerStats.games / 100) * 100);
+            document.getElementById('progress-fill').style.width = progress + '%';
+            const generation = Math.floor(playerStats.games / 10) + 1;
+            document.getElementById('current-gen').innerHTML = `Поколение ${generation}`;
+            document.getElementById('gen-display').innerHTML = `поколение #${generation}`;
+            
+            if (playerStats.games > 0) {
+                const aiWinrate = (playerStats.losses / playerStats.games * 100).toFixed(0);
+                document.getElementById('winrate-display').innerHTML = `${aiWinrate}% побед`;
+            }
+            
+            if (playerStats.games >= 100) {
+                document.getElementById('evolution-message').innerHTML = '✅ ИИ готов к эволюции!';
+            } else {
+                document.getElementById('evolution-message').innerHTML = `🧠 Осталось ${100 - playerStats.games} игр до эволюции`;
+            }
+        }
+        
+        // ========== ИИ ==========
+        function getAIMove() {
+            if (aiHistory.length < 3) {
+                return Math.random() < 0.36 ? 'rock' : (Math.random() < 0.5 ? 'scissors' : 'paper');
+            }
+            
+            const lastMove = aiHistory[aiHistory.length - 1];
+            let rockCount = 0, scissorsCount = 0, paperCount = 0;
+            
+            for (let i = 0; i < aiHistory.length - 1; i++) {
+                if (aiHistory[i] === lastMove) {
+                    const next = aiHistory[i + 1];
+                    if (next === 'rock') rockCount++;
+                    else if (next === 'scissors') scissorsCount++;
+                    else if (next === 'paper') paperCount++;
+                }
+            }
+            
+            let predicted = 'rock';
+            if (scissorsCount > rockCount && scissorsCount > paperCount) predicted = 'scissors';
+            if (paperCount > rockCount && paperCount > scissorsCount) predicted = 'paper';
+            
+            if (predicted === 'rock') return 'paper';
+            if (predicted === 'scissors') return 'rock';
+            return 'scissors';
+        }
+        
+        function getWinner(player, ai) {
+            if (player === ai) return 'tie';
+            if ((player === 'rock' && ai === 'scissors') ||
+                (player === 'scissors' && ai === 'paper') ||
+                (player === 'paper' && ai === 'rock')) return 'player';
+            return 'ai';
+        }
+        
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const c = document.createElement('div');
+                c.classList.add('confetti');
+                c.style.width = (Math.random() * 8 + 4) + 'px';
+                c.style.height = c.style.width;
+                c.style.background = ['#2ECC71', '#9B59B6', '#3498DB'][Math.floor(Math.random() * 3)];
+                c.style.left = Math.random() * 100 + '%';
+                document.body.appendChild(c);
+                setTimeout(() => c.remove(), 1000);
+            }
+        }
+        
+        function shakeElement() {
+            document.querySelector('.game-section').classList.add('shake');
+            setTimeout(() => document.querySelector('.game-section').classList.remove('shake'), 300);
+        }
+        
+        function play(playerMove) {
+            const moveNames = { rock: '🪨 Камень', scissors: '✂️ Ножницы', paper: '📄 Бумага' };
+            const aiMove = getAIMove();
+            const winner = getWinner(playerMove, aiMove);
+            
+            let resultText = '', resultClass = '';
+            if (winner === 'player') {
+                resultText = 'ТЫ ПОБЕДИЛ! 🎉';
+                resultClass = 'result-win';
+                playerStats.wins++;
+                playerStats.currentStreak++;
+                if (playerStats.currentStreak > playerStats.bestStreak) playerStats.bestStreak = playerStats.currentStreak;
+                createConfetti();
+            } else if (winner === 'ai') {
+                resultText = 'ИИ ПОБЕДИЛ! 💀';
+                resultClass = 'result-lose';
+                playerStats.losses++;
+                playerStats.currentStreak = 0;
+                shakeElement();
+            } else {
+                resultText = 'НИЧЬЯ! 🤝';
+                resultClass = 'result-tie';
+            }
+            
+            playerStats.games++;
+            aiHistory.push(playerMove);
+            saveStats();
+            updateStatsDisplay();
+            
+            document.getElementById('result-area').innerHTML = `
+                <div class="result-text ${resultClass}">${resultText}</div>
+                <div class="result-detail">Ты: ${moveNames[playerMove]} | ИИ: ${moveNames[aiMove]}</div>
+            `;
+            
+            const aiAvatar = document.querySelector('.ai-avatar');
+            aiAvatar.style.transform = 'scale(1.1)';
+            setTimeout(() => { aiAvatar.style.transform = 'scale(1)'; }, 200);
+            
+            updateLeaderboardPreview();
+            checkAndSaveRecord();
+        }
+        
+        function updateLeaderboardPreview() {
+            const records = JSON.parse(localStorage.getItem('rps_leaderboard') || '[]');
+            records.sort((a, b) => b.streak - a.streak);
+            const container = document.getElementById('leaderboard');
+            container.innerHTML = '';
+            
+            if (records.length === 0) {
+                container.innerHTML = '<div class="leaderboard-item">Пока нет рекордов</div>';
+                return;
+            }
+            
+            for (let i = 0; i < Math.min(3, records.length); i++) {
+                const r = records[i];
+                const rank = i + 1;
+                let rankIcon = rank;
+                if (rank === 1) rankIcon = '👑 1';
+                else if (rank === 2) rankIcon = '⭐ 2';
+                else if (rank === 3) rankIcon = '⚡ 3';
+                const div = document.createElement('div');
+                div.className = `leaderboard-item rank-${rank}`;
+                div.innerHTML = `<span class="rank">${rankIcon}</span><span>${escapeHtml(r.name)}</span><span>${r.streak} побед</span>`;
+                container.appendChild(div);
+            }
+        }
+        
+        function checkAndSaveRecord() {
+            const playerName = localStorage.getItem('rps_player_name');
+            if (!playerName) return;
+            if (playerStats.currentStreak > 0 && playerStats.currentStreak === playerStats.bestStreak && playerStats.currentStreak >= 3) {
+                let records = JSON.parse(localStorage.getItem('rps_leaderboard') || '[]');
+                records.push({
+                    name: playerName,
+                    streak: playerStats.currentStreak,
+                    date: new Date().toISOString()
+                });
+                records.sort((a, b) => b.streak - a.streak);
+                records = records.slice(0, 50);
+                localStorage.setItem('rps_leaderboard', JSON.stringify(records));
+                updateLeaderboardPreview();
+            }
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // ========== ИНИЦИАЛИЗАЦИЯ ==========
+        function init() {
+            loadStats();
+            updateLeaderboardPreview();
+            
+            document.querySelectorAll('.move-btn').forEach(btn => {
+                btn.addEventListener('click', () => play(btn.dataset.move));
+            });
+            
+            document.getElementById('menu-toggle').addEventListener('click', () => {
+                document.getElementById('nav-links').classList.toggle('active');
+            });
+        }
+        
+        init();
+        
+        const style = document.createElement('style');
+        style.textContent = `
+            .shake { animation: shakeAnim 0.3s ease; }
+            @keyframes shakeAnim {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-5px); }
+                75% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

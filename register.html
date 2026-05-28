@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games with Learning AI — Регистрация</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0A0A0F;
+            color: #FFFFFF;
+            min-height: 100vh;
+        }
+        
+        .glass-card {
+            background: rgba(20, 20, 30, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 32px;
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        .header {
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+        
+        .logo-icon { font-size: 32px; }
+        .logo-text { background: linear-gradient(135deg, #fff, #9B59B6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .nav-links { display: flex; gap: 32px; }
+        .nav-links a { color: #A0A0B0; text-decoration: none; transition: color 0.2s; font-weight: 500; }
+        .nav-links a:hover, .nav-links a.active { color: #FFFFFF; }
+        
+        .menu-toggle { display: none; background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
+        
+        .main-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 60px 32px;
+        }
+        
+        .register-form {
+            padding: 48px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+        
+        .subtitle {
+            color: #A0A0B0;
+            margin-bottom: 32px;
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #A0A0B0;
+            font-size: 14px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #9B59B6;
+        }
+        
+        .form-group input::placeholder {
+            color: #4A4A5A;
+        }
+        
+        .form-hint {
+            font-size: 12px;
+            color: #6B6B7A;
+            margin-top: 4px;
+        }
+        
+        .register-btn {
+            width: 100%;
+            padding: 14px;
+            background: #9B59B6;
+            border: none;
+            border-radius: 40px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+        }
+        
+        .register-btn:hover {
+            transform: translateY(-2px);
+            background: #8E44AD;
+        }
+        
+        .register-btn:active {
+            transform: translateY(0);
+        }
+        
+        .benefits {
+            margin-top: 32px;
+            padding-top: 32px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: left;
+        }
+        
+        .benefits h3 {
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+        
+        .benefits ul {
+            list-style: none;
+        }
+        
+        .benefits li {
+            padding: 8px 0;
+            color: #A0A0B0;
+            font-size: 14px;
+        }
+        
+        .benefits li:before {
+            content: "✓ ";
+            color: #2ECC71;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 32px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #6B6B7A;
+            font-size: 14px;
+            margin-top: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .menu-toggle { display: block; }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: rgba(10, 10, 15, 0.98);
+                flex-direction: column;
+                padding: 20px;
+                gap: 16px;
+            }
+            .nav-links.active { display: flex; }
+            .register-form { padding: 24px; }
+            h1 { font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">🎮</span>
+                <span class="logo-text">Games with Learning AI</span>
+            </a>
+            <button class="menu-toggle" id="menu-toggle">☰</button>
+            <div class="nav-links" id="nav-links">
+                <a href="index.html">Главная</a>
+                <a href="about.html">Что это?</a>
+                <a href="register.html" class="active">Регистрация</a>
+                <a href="leaderboard.html">Таблица</a>
+            </div>
+        </nav>
+    </header>
+    
+    <main class="main-container">
+        <div class="glass-card register-form">
+            <h1>📝 Создать аккаунт</h1>
+            <div class="subtitle">Введи имя — и ты в игре</div>
+            
+            <form id="register-form">
+                <div class="form-group">
+                    <label>👤 Твоё имя</label>
+                    <input type="text" id="username" placeholder="Например: GODLIKE, Terminator, FireMaster" maxlength="20" autocomplete="off">
+                    <div class="form-hint">От 3 до 20 символов, только буквы и цифры</div>
+                </div>
+                
+                <div class="form-group">
+                    <label>📧 Email (необязательно)</label>
+                    <input type="email" id="email" placeholder="example@mail.com">
+                    <div class="form-hint">Только для восстановления имени, спама не будет</div>
+                </div>
+                
+                <button type="submit" class="register-btn">🚀 Начать играть</button>
+            </form>
+            
+            <div class="benefits">
+                <h3>Что даёт регистрация?</h3>
+                <ul>
+                    <li>Твоё имя в таблице рекордов</li>
+                    <li>Твоя статистика сохраняется навсегда</li>
+                    <li>ИИ запоминает твой стиль между визитами</li>
+                    <li>Доступ к турнирам и достижениям</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <p>© 2026 Games with Learning AI — эксперимент по эволюции искусственного интеллекта</p>
+    </footer>
+    
+    <script>
+        // Мобильное меню
+        document.getElementById('menu-toggle').addEventListener('click', () => {
+            document.getElementById('nav-links').classList.toggle('active');
+        });
+        
+        // Валидация имени
+        function isValidName(name) {
+            if (name.length < 3 || name.length > 20) return false;
+            return /^[a-zA-Z0-9а-яА-Я]+$/.test(name);
+        }
+        
+        // Регистрация
+        document.getElementById('register-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            
+            // Проверка имени
+            if (!username) {
+                alert('Введи своё имя!');
+                return;
+            }
+            
+            if (username.length < 3) {
+                alert('Имя должно быть не менее 3 символов');
+                return;
+            }
+            
+            if (username.length > 20) {
+                alert('Имя должно быть не более 20 символов');
+                return;
+            }
+            
+            // Сохраняем в localStorage
+            localStorage.setItem('rps_player_name', username);
+            if (email) {
+                localStorage.setItem('rps_player_email', email);
+            }
+            
+            // Создаём запись в таблице рекордов (если есть статистика)
+            const stats = JSON.parse(localStorage.getItem('rps_player_stats') || '{"bestStreak": 0}');
+            if (stats.bestStreak > 0) {
+                // Добавляем в leaderboard
+                const records = JSON.parse(localStorage.getItem('rps_leaderboard') || '[]');
+                records.push({
+                    name: username,
+                    streak: stats.bestStreak,
+                    date: new Date().toISOString()
+                });
+                // Сортируем и оставляем топ-50
+                records.sort((a, b) => b.streak - a.streak);
+                localStorage.setItem('rps_leaderboard', JSON.stringify(records.slice(0, 50)));
+            }
+            
+            alert(`Добро пожаловать, ${username}!`);
+            window.location.href = 'index.html';
+        });
+        
+        // Если уже зарегистрирован — предложим перейти к игре
+        const savedName = localStorage.getItem('rps_player_name');
+        if (savedName) {
+            const goToGame = confirm(`Вы уже зарегистрированы как "${savedName}". Перейти к игре?`);
+            if (goToGame) {
+                window.location.href = 'rps/index.html';
+            }
+        }
+    </script>
+</body>
+</html>

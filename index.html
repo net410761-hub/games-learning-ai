@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games with Learning AI — платформа эволюционирующих игр</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0A0A0F;
+            color: #FFFFFF;
+            min-height: 100vh;
+        }
+        
+        .glass-card {
+            background: rgba(20, 20, 30, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 32px;
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        .header {
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+        
+        .logo-icon { font-size: 32px; }
+        .logo-text { background: linear-gradient(135deg, #fff, #9B59B6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .nav-links { display: flex; gap: 32px; }
+        .nav-links a { color: #A0A0B0; text-decoration: none; transition: color 0.2s; font-weight: 500; }
+        .nav-links a:hover { color: #FFFFFF; }
+        
+        .menu-toggle { display: none; background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
+        
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 32px;
+        }
+        
+        .hero { text-align: center; margin-bottom: 80px; }
+        .hero h1 { font-size: 64px; margin-bottom: 24px; background: linear-gradient(135deg, #fff, #9B59B6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 20px; color: #A0A0B0; max-width: 600px; margin: 0 auto; }
+        
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            margin: 40px 0;
+        }
+        
+        .game-card { padding: 32px; text-align: center; text-decoration: none; color: white; display: block; }
+        .game-icon { font-size: 64px; margin-bottom: 20px; }
+        .game-card h2 { font-size: 28px; margin-bottom: 12px; }
+        .game-card p { color: #A0A0B0; margin-bottom: 20px; }
+        
+        .status {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ECC71;
+        }
+        
+        .status-soon { background: rgba(243, 156, 18, 0.2); color: #F39C12; }
+        .status-later { background: rgba(108, 107, 122, 0.2); color: #6B6B7A; }
+        
+        .play-btn {
+            display: inline-block;
+            padding: 12px 28px;
+            background: #9B59B6;
+            border-radius: 40px;
+            color: white;
+            text-decoration: none;
+            margin-top: 16px;
+            transition: transform 0.2s;
+        }
+        
+        .play-btn:hover { transform: translateY(-2px); }
+        .play-btn.disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .footer {
+            text-align: center;
+            padding: 32px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #6B6B7A;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .menu-toggle { display: block; }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: rgba(10, 10, 15, 0.98);
+                flex-direction: column;
+                padding: 20px;
+                gap: 16px;
+            }
+            .nav-links.active { display: flex; }
+            .hero h1 { font-size: 36px; }
+            .main-container { padding: 40px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">🎮</span>
+                <span class="logo-text">Games with Learning AI</span>
+            </a>
+            <button class="menu-toggle" id="menu-toggle">☰</button>
+            <div class="nav-links" id="nav-links">
+                <a href="index.html">Главная</a>
+                <a href="about.html">Что это?</a>
+                <a href="register.html">Регистрация</a>
+                <a href="leaderboard.html">Таблица</a>
+            </div>
+        </nav>
+    </header>
+    
+    <main class="main-container">
+        <div class="hero">
+            <h1>Игры, где ИИ<br>учится на тебе</h1>
+            <p>Каждая партия — это урок. Каждый игрок — учитель.</p>
+        </div>
+        
+        <h2 style="text-align: center; margin-bottom: 32px;">🎮 Доступные игры</h2>
+        <div class="games-grid">
+            <a href="rps/index.html" class="game-card glass-card">
+                <div class="game-icon">🪨✂️📄</div>
+                <div class="status">🔥 Доступно сейчас</div>
+                <h2>RPS-AI</h2>
+                <p>Камень-ножницы-бумага против нейросети, которая учится на каждом ходе.</p>
+                <span class="play-btn">Играть →</span>
+            </a>
+            
+            <div class="game-card glass-card">
+                <div class="game-icon">❌⭕</div>
+                <div class="status status-soon">⏳ Скоро</div>
+                <h2>TicTacToe-AI</h2>
+                <p>Крестики-нолики с идеальным ИИ, который никогда не проигрывает.</p>
+                <span class="play-btn disabled">Скоро</span>
+            </div>
+            
+            <div class="game-card glass-card">
+                <div class="game-icon">🔴⚫</div>
+                <div class="status status-later">🔒 2030</div>
+                <h2>Mini Checkers-AI</h2>
+                <p>Шашки 5×5. Самый сложный ИИ на платформе.</p>
+                <span class="play-btn disabled">В разработке</span>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <p>© 2026 Games with Learning AI — эксперимент по эволюции искусственного интеллекта</p>
+    </footer>
+    
+    <script>
+        document.getElementById('menu-toggle').addEventListener('click', () => {
+            document.getElementById('nav-links').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
