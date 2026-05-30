@@ -10,14 +10,12 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #0A0A0F;
             color: #FFFFFF;
             min-height: 100vh;
         }
-        
         .glass-card {
             background: rgba(20, 20, 30, 0.6);
             backdrop-filter: blur(20px);
@@ -25,11 +23,9 @@
             border-radius: 32px;
             transition: all 0.3s ease;
         }
-        
         .glass-card:hover {
             border-color: rgba(255, 255, 255, 0.15);
         }
-        
         .header {
             background: rgba(10, 10, 15, 0.95);
             backdrop-filter: blur(10px);
@@ -38,7 +34,6 @@
             top: 0;
             z-index: 100;
         }
-        
         .nav {
             max-width: 1400px;
             margin: 0 auto;
@@ -49,7 +44,6 @@
             flex-wrap: wrap;
             gap: 16px;
         }
-        
         .logo {
             display: flex;
             align-items: center;
@@ -59,84 +53,32 @@
             text-decoration: none;
             color: white;
         }
-        
         .logo-icon { font-size: 32px; }
         .logo-text { background: linear-gradient(135deg, #fff, #9B59B6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
         .nav-links { display: flex; gap: 32px; }
         .nav-links a { color: #A0A0B0; text-decoration: none; transition: color 0.2s; font-weight: 500; }
         .nav-links a:hover, .nav-links a.active { color: #FFFFFF; }
-        
         .menu-toggle { display: none; background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
-        
-        .main-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 60px 32px;
-        }
-        
-        .content {
-            padding: 48px;
-        }
-        
-        h1 {
-            font-size: 48px;
-            margin-bottom: 24px;
-            background: linear-gradient(135deg, #fff, #9B59B6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        h2 {
-            font-size: 28px;
-            margin: 40px 0 20px;
-            color: #9B59B6;
-        }
-        
-        h3 {
-            font-size: 20px;
-            margin: 24px 0 12px;
-            color: #FFFFFF;
-        }
-        
-        p {
-            color: #A0A0B0;
-            line-height: 1.6;
-            margin-bottom: 16px;
-            font-size: 16px;
-        }
-        
+        .main-container { max-width: 1000px; margin: 0 auto; padding: 60px 32px; }
+        .content { padding: 48px; }
+        h1 { font-size: 48px; margin-bottom: 24px; background: linear-gradient(135deg, #fff, #9B59B6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        h2 { font-size: 28px; margin: 40px 0 20px; color: #9B59B6; }
+        p { color: #A0A0B0; line-height: 1.6; margin-bottom: 16px; font-size: 16px; }
         .feature-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 24px;
             margin: 32px 0;
         }
-        
         .feature {
             padding: 24px;
             background: rgba(255, 255, 255, 0.03);
             border-radius: 20px;
         }
-        
-        .feature-icon {
-            font-size: 40px;
-            margin-bottom: 16px;
-        }
-        
-        .feature h3 {
-            margin: 0 0 8px 0;
-        }
-        
-        .feature p {
-            font-size: 14px;
-            margin: 0;
-        }
-        
-        .timeline {
-            margin: 32px 0;
-        }
-        
+        .feature-icon { font-size: 40px; margin-bottom: 16px; }
+        .feature h3 { margin: 0 0 8px 0; }
+        .feature p { font-size: 14px; margin: 0; }
+        .timeline { margin: 32px 0; }
         .timeline-item {
             display: flex;
             gap: 24px;
@@ -144,25 +86,18 @@
             border-left: 2px solid #9B59B6;
             margin-bottom: 24px;
         }
-        
         .timeline-year {
             font-size: 20px;
             font-weight: bold;
             color: #9B59B6;
             min-width: 80px;
         }
-        
-        .timeline-content h4 {
-            font-size: 18px;
-            margin-bottom: 8px;
-        }
-        
+        .timeline-content h4 { font-size: 18px; margin-bottom: 8px; }
         .faq-item {
             margin-bottom: 24px;
             padding: 16px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
-        
         .faq-question {
             font-size: 18px;
             font-weight: bold;
@@ -170,17 +105,12 @@
             display: flex;
             justify-content: space-between;
         }
-        
         .faq-answer {
             color: #A0A0B0;
             margin-top: 12px;
             display: none;
         }
-        
-        .faq-answer.active {
-            display: block;
-        }
-        
+        .faq-answer.active { display: block; }
         .footer {
             text-align: center;
             padding: 32px;
@@ -189,7 +119,6 @@
             font-size: 14px;
             margin-top: 40px;
         }
-        
         @media (max-width: 768px) {
             .menu-toggle { display: block; }
             .nav-links {
@@ -252,12 +181,10 @@
                     <h3>Адаптация</h3>
                     <p>ИИ подстраивается под твой стиль игры. Чем дольше играешь — тем сложнее победить.</p>
                 </div>
-                <div class="feature">
-                    <div class="feature-icon">🌙</div>
-                    <h3>Ночное обучение</h3>
-                    <p>С 3:00 до 5:00 ИИ анализирует тысячи паттернов, создаёт новые стратегии и тестирует их.</p>
-                </div>
             </div>
+            
+            <h2>🧬 Эволюция ИИ</h2>
+            <p>ИИ эволюционирует, когда <strong>все игроки в сумме набирают 10 000 побед</strong>. Сайт становится недоступным на 4 часа, ИИ анализирует партии и становится умнее. После эволюции цель вырастает на 1000 побед, а поколение ИИ увеличивается.</p>
             
             <h2>📜 Дорожная карта</h2>
             <div class="timeline">
@@ -266,13 +193,6 @@
                     <div class="timeline-content">
                         <h4>Запуск RPS-AI</h4>
                         <p>Первая игра на платформе. ИИ начинает с глобальной статистики и учится на каждом игроке.</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-year">2026-2027</div>
-                    <div class="timeline-content">
-                        <h4>Развитие</h4>
-                        <p>Сбор данных, улучшение алгоритмов, эволюция ИИ на основе тысяч игроков.</p>
                     </div>
                 </div>
                 <div class="timeline-item">
@@ -290,9 +210,6 @@
                     </div>
                 </div>
             </div>
-            
-            <h2>🌙 Ночной режим</h2>
-            <p>С 3:00 до 5:00 сайт не работает. Почему? Потому что в это время ИИ <strong>учится</strong>. Он анализирует все паттерны, создаёт новые стратегии и тестирует их. Каждое утро он просыпается умнее.</p>
             
             <h2>❓ Часто задаваемые вопросы</h2>
             
@@ -328,16 +245,6 @@
             
             <div class="faq-item">
                 <div class="faq-question" onclick="toggleFAQ(this)">
-                    Почему сайт не работает ночью?
-                    <span>▼</span>
-                </div>
-                <div class="faq-answer">
-                    С 3:00 до 5:00 ИИ учится. Он анализирует тысячи паттернов и становится умнее. Вернись в 5:00 — он будет готов к новым битвам.
-                </div>
-            </div>
-            
-            <div class="faq-item">
-                <div class="faq-question" onclick="toggleFAQ(this)">
                     Что дальше? Какие игры будут?
                     <span>▼</span>
                 </div>
@@ -350,7 +257,7 @@
     
     <footer class="footer">
         <p>© 2026 Games with Learning AI — эксперимент по эволюции искусственного интеллекта</p>
-        <p>🌙 Ночной режим: с 3:00 до 5:00 ИИ учится. Вернись в 5:00!</p>
+        <p>🧬 ИИ эволюционирует, когда все игроки набирают 10 000 побед. Сайт недоступен 4 часа.</p>
     </footer>
     
     <script>
