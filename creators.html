@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games with Learning AI — Доска стримеров</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0A0A0F;
+            color: #FFFFFF;
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(20, 20, 30, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 32px;
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        .header {
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+        .logo-icon { font-size: 32px; }
+        .logo-text { background: linear-gradient(135deg, #fff, #9B59B6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 32px; }
+        .nav-links a { color: #A0A0B0; text-decoration: none; transition: color 0.2s; font-weight: 500; }
+        .nav-links a:hover, .nav-links a.active { color: #FFFFFF; }
+        .menu-toggle { display: none; background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 32px;
+        }
+        .creators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 32px;
+        }
+        .creator-card {
+            padding: 24px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .creator-card:hover {
+            transform: translateY(-5px);
+        }
+        .creator-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin: 0 auto 16px;
+        }
+        .creator-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .creator-platform {
+            font-size: 14px;
+            color: #A0A0B0;
+            margin-bottom: 8px;
+        }
+        .creator-streak {
+            font-size: 24px;
+            font-weight: bold;
+            color: #9B59B6;
+            margin: 12px 0;
+        }
+        .creator-link {
+            display: inline-block;
+            padding: 8px 16px;
+            background: rgba(155, 89, 182, 0.2);
+            border-radius: 20px;
+            text-decoration: none;
+            color: #9B59B6;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .creator-link:hover {
+            background: #9B59B6;
+            color: white;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+        .badge-platinum { background: rgba(224, 224, 224, 0.2); color: #E5E4E2; }
+        .badge-gold { background: rgba(255, 215, 0, 0.2); color: #FFD700; }
+        .badge-silver { background: rgba(192, 192, 192, 0.2); color: #C0C0C0; }
+        .footer {
+            text-align: center;
+            padding: 32px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #6B6B7A;
+            font-size: 14px;
+            margin-top: 40px;
+        }
+        @media (max-width: 768px) {
+            .menu-toggle { display: block; }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: rgba(10, 10, 15, 0.98);
+                flex-direction: column;
+                padding: 20px;
+                gap: 16px;
+            }
+            .nav-links.active { display: flex; }
+            .creators-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">🎮</span>
+                <span class="logo-text">Games with Learning AI</span>
+            </a>
+            <button class="menu-toggle" id="menu-toggle">☰</button>
+            <div class="nav-links" id="nav-links">
+                <a href="index.html">Главная</a>
+                <a href="about.html">Что это?</a>
+                <a href="register.html">Регистрация</a>
+                <a href="leaderboard.html">Таблица</a>
+                <a href="creators.html" class="active">Стримеры</a>
+                <a href="profile.html">Профиль</a>
+                <a href="friends.html">Друзья</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-container">
+        <div class="glass-card" style="padding: 32px;">
+            <h1 style="text-align: center; margin-bottom: 16px;">🎥 Доска стримеров и ютуберов</h1>
+            <p style="text-align: center; color: #A0A0B0; margin-bottom: 32px;">Контент-мейкеры, которые играли в RPS-AI</p>
+            
+            <div class="creators-grid" id="creators-grid">
+                <div style="text-align: center; padding: 40px;">Загрузка...</div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>© 2026 Games with Learning AI — эксперимент по эволюции искусственного интеллекта</p>
+        <p>🧬 ИИ эволюционирует, когда все игроки набирают 10 000 побед. Сайт недоступен 4 часа.</p>
+    </footer>
+
+    <script>
+        const API_URL = 'https://rps-server02.onrender.com/api';
+
+        async function loadCreators() {
+            try {
+                const response = await fetch(`${API_URL}/creators`);
+                const creators = await response.json();
+                const container = document.getElementById('creators-grid');
+                container.innerHTML = '';
+                
+                if (!creators.length) {
+                    container.innerHTML = '<div style="text-align: center; padding: 40px;">Пока нет стримеров. Стань первым!</div>';
+                    return;
+                }
+                
+                creators.forEach(creator => {
+                    const card = document.createElement('div');
+                    card.className = 'creator-card glass-card';
+                    card.innerHTML = `
+                        <div class="badge ${getBadgeClass(creator.streak)}">${getBadgeName(creator.streak)}</div>
+                        <div class="creator-avatar">${getPlatformIcon(creator.platform)}</div>
+                        <div class="creator-name">${escapeHtml(creator.name)}</div>
+                        <div class="creator-platform">${creator.platform}</div>
+                        <div class="creator-streak">🏆 ${creator.streak} побед</div>
+                        <a href="${creator.link}" target="_blank" class="creator-link">📺 Смотреть канал →</a>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch(e) {
+                console.error('Ошибка загрузки стримеров:', e);
+                document.getElementById('creators-grid').innerHTML = '<div style="text-align: center; padding: 40px;">Ошибка загрузки</div>';
+            }
+        }
+        
+        function getBadgeClass(streak) {
+            if (streak >= 50) return 'badge-platinum';
+            if (streak >= 20) return 'badge-gold';
+            return 'badge-silver';
+        }
+        
+        function getBadgeName(streak) {
+            if (streak >= 50) return '🏆 ПЛАТИНОВЫЙ';
+            if (streak >= 20) return '⭐ ЗОЛОТОЙ';
+            return '✨ СЕРЕБРЯНЫЙ';
+        }
+        
+        function getPlatformIcon(platform) {
+            if (platform === 'YouTube') return '📺';
+            if (platform === 'Twitch') return '🎮';
+            return '🎥';
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        document.getElementById('menu-toggle').addEventListener('click', () => {
+            document.getElementById('nav-links').classList.toggle('active');
+        });
+        
+        loadCreators();
+    </script>
+</body>
+</html>
