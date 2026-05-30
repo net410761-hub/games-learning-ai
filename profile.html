@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games with Learning AI — Профиль</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0A0A0F;
+            color: #FFFFFF;
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(20, 20, 30, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 32px;
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        .header {
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+        .logo-icon { font-size: 32px; }
+        .logo-text { background: linear-gradient(135deg, #fff, #9B59B6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 32px; }
+        .nav-links a { color: #A0A0B0; text-decoration: none; transition: color 0.2s; font-weight: 500; }
+        .nav-links a:hover, .nav-links a.active { color: #FFFFFF; }
+        .menu-toggle { display: none; background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
+        .main-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 60px 32px;
+        }
+        .profile-card {
+            padding: 32px;
+            text-align: center;
+        }
+        .avatar {
+            font-size: 80px;
+            margin: 20px 0;
+        }
+        .rank {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 40px;
+            background: rgba(155, 89, 182, 0.2);
+            margin: 16px 0;
+        }
+        .achievements {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin: 24px 0;
+        }
+        .achievement {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 14px;
+        }
+        .stats {
+            text-align: left;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 20px;
+            margin: 20px 0;
+        }
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .change-avatar {
+            margin-top: 20px;
+        }
+        .avatar-btn {
+            background: none;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 40px;
+            padding: 8px 16px;
+            color: white;
+            cursor: pointer;
+            margin: 0 4px;
+            font-size: 24px;
+        }
+        .avatar-btn:hover { background: rgba(255,255,255,0.1); }
+        .footer {
+            text-align: center;
+            padding: 32px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #6B6B7A;
+            font-size: 14px;
+            margin-top: 40px;
+        }
+        @media (max-width: 768px) {
+            .menu-toggle { display: block; }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: rgba(10, 10, 15, 0.98);
+                flex-direction: column;
+                padding: 20px;
+                gap: 16px;
+            }
+            .nav-links.active { display: flex; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">🎮</span>
+                <span class="logo-text">Games with Learning AI</span>
+            </a>
+            <button class="menu-toggle" id="menu-toggle">☰</button>
+            <div class="nav-links" id="nav-links">
+                <a href="index.html">Главная</a>
+                <a href="about.html">Что это?</a>
+                <a href="register.html">Регистрация</a>
+                <a href="leaderboard.html">Таблица</a>
+                <a href="creators.html">Стримеры</a>
+                <a href="profile.html" class="active">Профиль</a>
+                <a href="friends.html">Друзья</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-container">
+        <div class="glass-card profile-card">
+            <div class="avatar" id="avatar">👤</div>
+            <h2 id="player-name">ИГРОК</h2>
+            <div class="rank" id="rank">🥉 Бронза</div>
+            
+            <div class="stats">
+                <div class="stat-item"><span>🏆 Всего побед</span><span id="totalWins">0</span></div>
+                <div class="stat-item"><span>⚡ Лучшая серия</span><span id="bestStreak">0</span></div>
+                <div class="stat-item"><span>📅 Дата регистрации</span><span id="registered">—</span></div>
+            </div>
+            
+            <div class="achievements" id="achievements"></div>
+            
+            <div class="change-avatar">
+                <p>Сменить аватар:</p>
+                <button class="avatar-btn" data-avatar="👤">👤</button>
+                <button class="avatar-btn" data-avatar="😎">😎</button>
+                <button class="avatar-btn" data-avatar="🔥">🔥</button>
+                <button class="avatar-btn" data-avatar="🤖">🤖</button>
+                <button class="avatar-btn" data-avatar="👑">👑</button>
+                <button class="avatar-btn" data-avatar="🐉">🐉</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>© 2026 Games with Learning AI — эксперимент по эволюции искусственного интеллекта</p>
+        <p>🧬 ИИ эволюционирует, когда все игроки набирают 10 000 побед. Сайт недоступен 4 часа.</p>
+    </footer>
+
+    <script>
+        const API_URL = 'https://rps-server02.onrender.com/api';
+        const API_KEY = 'X7kL9mN2pQ9rT8vW3zA1bC4';
+        
+        let currentName = localStorage.getItem('rps_player_name') || 'ИГРОК';
+        
+        async function loadProfile() {
+            const response = await fetch(`${API_URL}/profile/${encodeURIComponent(currentName)}`);
+            if (response.ok) {
+                const profile = await response.json();
+                document.getElementById('player-name').innerText = profile.name;
+                document.getElementById('avatar').innerText = profile.avatar || '👤';
+                document.getElementById('totalWins').innerText = profile.totalWins || 0;
+                document.getElementById('bestStreak').innerText = profile.bestStreak || 0;
+                document.getElementById('registered').innerText = profile.registeredAt ? new Date(profile.registeredAt).toLocaleDateString() : '—';
+                document.getElementById('rank').innerHTML = `${profile.rank?.emoji || '🥉'} ${profile.rank?.name || 'Бронза'}`;
+                document.getElementById('rank').style.background = `rgba(${parseInt(profile.rank?.color?.slice(1,3), 16) || 155}, ${parseInt(profile.rank?.color?.slice(3,5), 16) || 89}, ${parseInt(profile.rank?.color?.slice(5,7), 16) || 182}, 0.2)`;
+                
+                const achievementsContainer = document.getElementById('achievements');
+                achievementsContainer.innerHTML = '';
+                const achievementsMap = {
+                    'first_win': 'Первая победа 🎉',
+                    'streak_5': '5 побед подряд 🔥',
+                    'streak_10': '10 побед подряд 💪',
+                    '100_wins': '100 побед 👑',
+                    '500_wins': '500 побед 🏆'
+                };
+                (profile.achievements || []).forEach(ach => {
+                    const span = document.createElement('span');
+                    span.className = 'achievement';
+                    span.innerText = achievementsMap[ach] || ach;
+                    achievementsContainer.appendChild(span);
+                });
+                if (!profile.achievements?.length) {
+                    achievementsContainer.innerHTML = '<span class="achievement">Нет достижений. Играй больше!</span>';
+                }
+            } else {
+                document.getElementById('totalWins').innerText = '—';
+                document.getElementById('bestStreak').innerText = '—';
+            }
+        }
+        
+        async function updateAvatar(avatar) {
+            await fetch(`${API_URL}/profile`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-API-Key': API_KEY },
+                body: JSON.stringify({ name: currentName, avatar })
+            });
+            loadProfile();
+        }
+        
+        document.querySelectorAll('.avatar-btn').forEach(btn => {
+            btn.addEventListener('click', () => updateAvatar(btn.dataset.avatar));
+        });
+        
+        document.getElementById('menu-toggle').addEventListener('click', () => {
+            document.getElementById('nav-links').classList.toggle('active');
+        });
+        
+        loadProfile();
+    </script>
+</body>
+</html>
