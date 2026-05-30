@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <title>RPS-AI — Играй против эволюционирующего ИИ</title>
     <style>
         * {
@@ -311,7 +311,7 @@
                         <span id="target-gen">Цель: 10000 побед</span>
                     </div>
                     <div style="margin-top: 12px; font-size: 12px; color: #A0A0B0;" id="evolution-message">
-                        🧠 Сыграй 10000 побед, чтобы ИИ эволюционировал
+                        🧠 Осталось 10000 побед до эволюции ИИ
                     </div>
                 </div>
             </div>
@@ -319,16 +319,16 @@
     </main>
     
     <footer class="footer">
-    <p>© 2026 Games with Learning AI — эксперимент по эволюции искусственного интеллекта</p>
-    <p>🧬 ИИ эволюционирует, когда все игроки набирают 10 000 побед. Сайт недоступен 4 часа.</p>
-</footer>
+        <p>© 2026 Games with Learning AI — эксперимент по эволюции искусственного интеллекта</p>
+        <p>🧬 ИИ эволюционирует, когда все игроки набирают 10 000 побед. Сайт недоступен 4 часа.</p>
+    </footer>
 
     <script>
         // ========== НАСТРОЙКИ СЕРВЕРА ==========
         const API_URL = 'https://rps-server02.onrender.com/api';
         const API_KEY = 'X7kL9mN2pQ9rT8vW3zA1bC4';
 
-        // ========== ИГРОК ==========
+        // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
         let playerStats = {
             games: 0, wins: 0, losses: 0, currentStreak: 0, bestStreak: 0
         };
@@ -340,25 +340,58 @@
             current_generation: 1
         };
         
+        let aiStrategy = { rock: 0.34, scissors: 0.33, paper: 0.33 };
+
+        // ========== ЗАГРУЗКА СТРАТЕГИИ ==========
+        async function loadStrategy() {
+            try {
+                const res = await fetch(`${API_URL}/strategy`);
+                if (res.ok) aiStrategy = await res.json();
+            } catch(e) { console.warn('Не удалось загрузить стратегию'); }
+        }
+
+        // ========== ЭВОЛЮЦИЯ ==========
         async function loadEvolution() {
             try {
                 const res = await fetch(`${API_URL}/evolution`);
-                if (res.ok) {
-                    const data = await res.json();
-                    currentEvolution = data;
-                    updateEvolutionUI();
+                if (res.status === 423) {
+                    showEvolutionPage();
+                    return;
                 }
+                const data = await res.json();
+                currentEvolution = data;
+                updateEvolutionUI();
             } catch(e) { console.warn('Эволюция временно недоступна'); }
         }
         
         function updateEvolutionUI() {
-            const remaining = currentEvolution.target_wins - currentEvolution.total_wins;
+            const remaining = Math.max(0, currentEvolution.target_wins - currentEvolution.total_wins);
             const percent = (currentEvolution.total_wins / currentEvolution.target_wins) * 100;
             document.getElementById('progress-fill').style.width = `${Math.min(100, percent)}%`;
             document.getElementById('current-gen').innerText = `Поколение ${currentEvolution.current_generation}`;
-            document.getElementById('evolution-message').innerHTML = `🧠 Осталось ${Math.max(0, remaining)} побед до эволюции ИИ`;
+            document.getElementById('evolution-message').innerHTML = `🧠 Осталось ${remaining} побед до эволюции ИИ`;
         }
         
+        function showEvolutionPage() {
+            document.body.innerHTML = `
+                <div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #0A0A0F; text-align: center;">
+                    <div>
+                        <div style="font-size: 80px; animation: pulse 2s infinite;">🧠</div>
+                        <h1 style="color: #9B59B6;">ИИ ЭВОЛЮЦИОНИРУЕТ</h1>
+                        <p style="color: #A0A0B0;">Набрано 10 000 побед! ИИ анализирует партии.</p>
+                        <p style="color: #A0A0B0;">Вернись через 4 часа — он будет умнее.</p>
+                    </div>
+                </div>
+                <style>
+                    @keyframes pulse {
+                        0%, 100% { transform: scale(1); opacity: 0.7; }
+                        50% { transform: scale(1.1); opacity: 1; text-shadow: 0 0 20px #9B59B6; }
+                    }
+                </style>
+            `;
+        }
+
+        // ========== РЕКОРДЫ И ПОБЕДЫ ==========
         async function saveRecordToServer(name, streak) {
             try {
                 await fetch(`${API_URL}/record-record`, {
@@ -372,16 +405,21 @@
         
         async function sendWinToServer(playerName) {
             try {
-                await fetch(`${API_URL}/record-win`, {
+                const res = await fetch(`${API_URL}/record-win`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'X-API-Key': API_KEY },
                     body: JSON.stringify({ player_name: playerName })
                 });
+                if (res.status === 423) {
+                    showEvolutionPage();
+                    return;
+                }
                 console.log('✅ Победа засчитана');
                 loadEvolution();
             } catch(e) { console.warn('❌ Ошибка отправки победы'); }
         }
-        
+
+        // ========== СТАТИСТИКА ИГРОКА ==========
         function loadStats() {
             const saved = localStorage.getItem('rps_player_stats');
             if (saved) playerStats = JSON.parse(saved);
@@ -410,10 +448,14 @@
             const generation = Math.floor(playerStats.games / 100) + 1;
             document.getElementById('gen-display').innerHTML = `поколение #${generation}`;
         }
-        
+
+        // ========== ИИ И ИГРОВАЯ ЛОГИКА ==========
         function getAIMove() {
             if (aiHistory.length < 3) {
-                return Math.random() < 0.36 ? 'rock' : (Math.random() < 0.5 ? 'scissors' : 'paper');
+                const rand = Math.random();
+                if (rand < aiStrategy.rock) return 'rock';
+                if (rand < aiStrategy.rock + aiStrategy.scissors) return 'scissors';
+                return 'paper';
             }
             const lastMove = aiHistory[aiHistory.length - 1];
             let rockCount = 0, scissorsCount = 0, paperCount = 0;
@@ -530,6 +572,7 @@
         function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
         
         function init() {
+            loadStrategy();
             loadStats();
             loadEvolution();
             updateLeaderboardPreview();
