@@ -243,6 +243,9 @@
                 <a href="../about.html">Что это?</a>
                 <a href="../register.html">Регистрация</a>
                 <a href="../leaderboard.html">Таблица</a>
+                <a href="../creators.html">Стримеры</a>
+                <a href="../profile.html">Профиль</a>
+                <a href="../friends.html">Друзья</a>
             </div>
         </nav>
     </header>
@@ -403,12 +406,12 @@
             } catch(e) { console.warn('❌ Ошибка сохранения рекорда'); }
         }
         
-        async function sendWinToServer(playerName) {
+        async function sendWinToServer(playerName, currentStreak) {
             try {
                 const res = await fetch(`${API_URL}/record-win`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'X-API-Key': API_KEY },
-                    body: JSON.stringify({ player_name: playerName })
+                    body: JSON.stringify({ player_name: playerName, streak: currentStreak })
                 });
                 if (res.status === 423) {
                     showEvolutionPage();
@@ -444,9 +447,6 @@
                 const aiWinrate = (playerStats.losses / playerStats.games * 100).toFixed(0);
                 document.getElementById('winrate-display').innerHTML = `${aiWinrate}% побед`;
             }
-            
-            const generation = Math.floor(playerStats.games / 100) + 1;
-            document.getElementById('gen-display').innerHTML = `поколение #${generation}`;
         }
 
         // ========== ИИ И ИГРОВАЯ ЛОГИКА ==========
@@ -536,7 +536,7 @@
                 if (playerStats.currentStreak > playerStats.bestStreak) playerStats.bestStreak = playerStats.currentStreak;
                 createConfetti();
                 const playerName = localStorage.getItem('rps_player_name') || 'ИГРОК';
-                sendWinToServer(playerName);
+                sendWinToServer(playerName, playerStats.currentStreak);
             } else if (winner === 'ai') {
                 resultText = 'ИИ ПОБЕДИЛ! 💀';
                 resultClass = 'result-lose';
@@ -571,10 +571,10 @@
         
         function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
         
-        function init() {
-            loadStrategy();
+        async function init() {
+            await loadStrategy();
             loadStats();
-            loadEvolution();
+            await loadEvolution();
             updateLeaderboardPreview();
             
             const savedName = localStorage.getItem('rps_player_name');
