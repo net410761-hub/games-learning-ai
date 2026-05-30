@@ -134,6 +134,9 @@
                 <a href="about.html">Что это?</a>
                 <a href="register.html">Регистрация</a>
                 <a href="leaderboard.html" class="active">Таблица</a>
+                <a href="creators.html">Стримеры</a>
+                <a href="profile.html">Профиль</a>
+                <a href="friends.html">Друзья</a>
             </div>
         </nav>
     </header>
@@ -160,20 +163,18 @@
 
     <footer class="footer">
         <p>© 2026 Games with Learning AI — эксперимент по эволюции искусственного интеллекта</p>
-        <p>🏆 Рекорды сохраняются в облаке — все игроки видят общую таблицу!</p>
+        <p>🧬 ИИ эволюционирует, когда все игроки набирают 10 000 побед. Сайт недоступен 4 часа.</p>
     </footer>
 
     <script>
-        // ========== НАСТРОЙКА СЕРВЕРА (ЗАМЕНИ НА СВОЙ АДРЕС) ==========
         const API_URL = 'https://rps-server02.onrender.com/api';
 
         async function getLeaderboard() {
             try {
                 const res = await fetch(`${API_URL}/leaderboard`);
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const data = await res.json();
-                return data;
-            } catch (e) {
+                return await res.json();
+            } catch(e) {
                 console.warn('Ошибка загрузки рекордов, используем локальные:', e);
                 const localRecords = JSON.parse(localStorage.getItem('rps_leaderboard') || '[]');
                 localRecords.sort((a,b) => b.streak - a.streak);
@@ -209,15 +210,14 @@
             const container = document.getElementById('your-record');
             if (!playerName) { container.style.display = 'none'; return; }
             try {
-                const res = await fetch(`${API_URL}/leaderboard`);
-                const records = await res.json();
+                const records = await getLeaderboard();
                 const bestStreak = records.find(r => r.name === playerName)?.streak || 0;
                 if (bestStreak > 0) {
                     container.style.display = 'block';
-                    container.innerHTML = `<strong>🏆 Твой лучший рекорд</strong><br>${escapeHtml(playerName)} — ${bestStreak} побед подряд<div style="margin-top:12px;"><a href="rps/index.html" style="color:#9B59B6;">🎮 Попробуй побить свой рекорд →</a></div>`;
+                    container.innerHTML = `<strong>🏆 Твой лучший рекорд</strong><br>${escapeHtml(playerName)} — ${bestStreak} побед подряд<div style="margin-top:12px;"><a href="rps/index.html?v=9" style="color:#9B59B6;">🎮 Попробуй побить свой рекорд →</a></div>`;
                 } else {
                     container.style.display = 'block';
-                    container.innerHTML = `<strong>🏆 У тебя пока нет рекордов</strong><br>Сыграй в RPS-AI и установи рекорд!<div style="margin-top:12px;"><a href="rps/index.html" style="color:#9B59B6;">🎮 Начать игру →</a></div>`;
+                    container.innerHTML = `<strong>🏆 У тебя пока нет рекордов</strong><br>Сыграй в RPS-AI и установи рекорд!<div style="margin-top:12px;"><a href="rps/index.html?v=9" style="color:#9B59B6;">🎮 Начать игру →</a></div>`;
                 }
             } catch(e) { container.style.display = 'none'; }
         }
