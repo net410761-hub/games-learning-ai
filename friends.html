@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games with Learning AI — Друзья</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0A0A0F;
+            color: #FFFFFF;
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(20, 20, 30, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 32px;
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        .header {
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+        .logo-icon { font-size: 32px; }
+        .logo-text { background: linear-gradient(135deg, #fff, #9B59B6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 32px; }
+        .nav-links a { color: #A0A0B0; text-decoration: none; transition: color 0.2s; font-weight: 500; }
+        .nav-links a:hover, .nav-links a.active { color: #FFFFFF; }
+        .menu-toggle { display: none; background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 32px;
+        }
+        .friends-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        .section {
+            padding: 24px;
+        }
+        .section h2 {
+            margin-bottom: 20px;
+            color: #9B59B6;
+        }
+        .friend-list {
+            list-style: none;
+        }
+        .friend-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .friend-name {
+            font-size: 16px;
+        }
+        .friend-actions button {
+            background: none;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 4px 12px;
+            color: white;
+            cursor: pointer;
+            margin-left: 8px;
+            transition: all 0.2s;
+        }
+        .friend-actions button:hover {
+            background: #9B59B6;
+            border-color: #9B59B6;
+        }
+        .add-friend {
+            margin-top: 24px;
+            display: flex;
+            gap: 12px;
+        }
+        .add-friend input {
+            flex: 1;
+            padding: 12px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            color: white;
+        }
+        .add-friend button {
+            padding: 12px 24px;
+            background: #9B59B6;
+            border: none;
+            border-radius: 24px;
+            color: white;
+            cursor: pointer;
+        }
+        .empty {
+            text-align: center;
+            color: #A0A0B0;
+            padding: 20px;
+        }
+        .footer {
+            text-align: center;
+            padding: 32px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #6B6B7A;
+            font-size: 14px;
+            margin-top: 40px;
+        }
+        @media (max-width: 768px) {
+            .menu-toggle { display: block; }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: rgba(10, 10, 15, 0.98);
+                flex-direction: column;
+                padding: 20px;
+                gap: 16px;
+            }
+            .nav-links.active { display: flex; }
+            .friends-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">🎮</span>
+                <span class="logo-text">Games with Learning AI</span>
+            </a>
+            <button class="menu-toggle" id="menu-toggle">☰</button>
+            <div class="nav-links" id="nav-links">
+                <a href="index.html">Главная</a>
+                <a href="about.html">Что это?</a>
+                <a href="register.html">Регистрация</a>
+                <a href="leaderboard.html">Таблица</a>
+                <a href="creators.html">Стримеры</a>
+                <a href="profile.html">Профиль</a>
+                <a href="friends.html" class="active">Друзья</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-container">
+        <div class="glass-card" style="padding: 32px;">
+            <h1 style="text-align: center; margin-bottom: 16px;">👥 Друзья</h1>
+            <div class="friends-container">
+                <div class="section">
+                    <h2>👫 Мои друзья</h2>
+                    <div id="friends-list" class="friend-list">
+                        <div class="empty">Загрузка...</div>
+                    </div>
+                </div>
+                <div class="section">
+                    <h2>📨 Заявки в друзья</h2>
+                    <div id="pending-list" class="friend-list">
+                        <div class="empty">Загрузка...</div>
+                    </div>
+                    <div class="add-friend">
+                        <input type="text" id="friend-name" placeholder="Имя друга">
+                        <button id="add-friend-btn">➕ Добавить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>© 2026 Games with Learning AI — эксперимент по эволюции искусственного интеллекта</p>
+        <p>🧬 ИИ эволюционирует, когда все игроки набирают 10 000 побед. Сайт недоступен 4 часа.</p>
+    </footer>
+
+    <script>
+        const API_URL = 'https://rps-server02.onrender.com/api';
+        const API_KEY = 'X7kL9mN2pQ9rT8vW3zA1bC4';
+        
+        let currentUser = localStorage.getItem('rps_player_name') || 'ИГРОК';
+        
+        async function loadFriends() {
+            const response = await fetch(`${API_URL}/friends/${encodeURIComponent(currentUser)}`);
+            const data = await response.json();
+            
+            const friendsList = document.getElementById('friends-list');
+            if (data.friends.length === 0) {
+                friendsList.innerHTML = '<div class="empty">😢 Пока нет друзей. Добавь кого-нибудь!</div>';
+            } else {
+                friendsList.innerHTML = '';
+                data.friends.forEach(friend => {
+                    const div = document.createElement('div');
+                    div.className = 'friend-item';
+                    div.innerHTML = `
+                        <span class="friend-name">👤 ${escapeHtml(friend)}</span>
+                        <div class="friend-actions">
+                            <button onclick="removeFriend('${friend}')">❌ Удалить</button>
+                        </div>
+                    `;
+                    friendsList.appendChild(div);
+                });
+            }
+            
+            const pendingList = document.getElementById('pending-list');
+            if (data.pending.length === 0) {
+                pendingList.innerHTML = '<div class="empty">📭 Нет новых заявок</div>';
+            } else {
+                pendingList.innerHTML = '';
+                data.pending.forEach(requester => {
+                    const div = document.createElement('div');
+                    div.className = 'friend-item';
+                    div.innerHTML = `
+                        <span class="friend-name">👤 ${escapeHtml(requester)}</span>
+                        <div class="friend-actions">
+                            <button onclick="acceptFriend('${requester}')">✅ Принять</button>
+                            <button onclick="rejectFriend('${requester}')">❌ Отклонить</button>
+                        </div>
+                    `;
+                    pendingList.appendChild(div);
+                });
+            }
+        }
+        
+        async function sendFriendRequest() {
+            const name = document.getElementById('friend-name').value.trim();
+            if (!name) return alert('Введите имя друга');
+            if (name === currentUser) return alert('Нельзя добавить самого себя');
+            
+            const response = await fetch(`${API_URL}/friends/request`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-API-Key': API_KEY },
+                body: JSON.stringify({ from: currentUser, to: name })
+            });
+            
+            if (response.ok) {
+                alert('Заявка отправлена!');
+                document.getElementById('friend-name').value = '';
+                loadFriends();
+            } else {
+                const error = await response.json();
+                alert('Ошибка: ' + (error.error || 'Не удалось отправить заявку'));
+            }
+        }
+        
+        async function acceptFriend(requester) {
+            await fetch(`${API_URL}/friends/accept`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-API-Key': API_KEY },
+                body: JSON.stringify({ user: currentUser, requester })
+            });
+            loadFriends();
+        }
+        
+        async function rejectFriend(requester) {
+            await fetch(`${API_URL}/friends/reject`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-API-Key': API_KEY },
+                body: JSON.stringify({ user: currentUser, requester })
+            });
+            loadFriends();
+        }
+        
+        async function removeFriend(friend) {
+            if (!confirm(`Удалить ${friend} из друзей?`)) return;
+            await fetch(`${API_URL}/friends/remove`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-API-Key': API_KEY },
+                body: JSON.stringify({ user: currentUser, friend })
+            });
+            loadFriends();
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        document.getElementById('menu-toggle').addEventListener('click', () => {
+            document.getElementById('nav-links').classList.toggle('active');
+        });
+        
+        document.getElementById('add-friend-btn').addEventListener('click', sendFriendRequest);
+        
+        loadFriends();
+    </script>
+</body>
+</html>
